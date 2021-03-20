@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nabv_graph"
+    app:startDestination="@id/allCharactersFragment">
+
+    <fragment
+        android:id="@+id/allCharactersFragment"
+        android:name="com.durbindevs.rickandmorty.fragments.AllCharactersFragment"
+        android:label="AllCharactersFragment" />
+    <fragment
+        android:id="@+id/allLocationsFragment"
+        android:name="com.durbindevs.rickandmorty.fragments.AllLocationsFragment"
+        android:label="AllLocationsFragment" />
+    <fragment
+        android:id="@+id/savedCharactersFragment"
+        android:name="com.durbindevs.rickandmorty.fragments.SavedCharactersFragment"
+        android:label="SavedCharactersFragment" />
+    <fragment
+        android:id="@+id/searchCharactersFragment"
+        android:name="com.durbindevs.rickandmorty.fragments.SearchCharactersFragment"
+        android:label="SearchCharactersFragment" />
+</navigation>

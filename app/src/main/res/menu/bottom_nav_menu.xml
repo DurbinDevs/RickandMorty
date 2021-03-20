@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/allCharactersFragment"
+        android:icon="@drawable/ic_person_outline"
+        android:title="@string/characters" />
+
+    <item
+        android:id="@+id/allLocationsFragment"
+        android:icon="@drawable/ic_place"
+        android:title="@string/locations" />
+
+    <item
+        android:id="@+id/savedCharactersFragment"
+        android:icon="@drawable/ic_favorite_border"
+        android:title="@string/favorites" />
+
+    <item
+        android:id="@+id/searchCharactersFragment"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search" />
+
+</menu>
