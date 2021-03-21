@@ -1,4 +1,4 @@
-package com.durbindevs.rickandmorty
+package com.durbindevs.rickandmorty.models
 
 data class Result(
     val created: String,
