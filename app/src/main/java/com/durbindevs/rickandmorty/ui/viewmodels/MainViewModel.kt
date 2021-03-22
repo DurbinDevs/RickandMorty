@@ -15,9 +15,9 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     val characterSearch: MutableLiveData<Response<Characters>> = MutableLiveData()
     val locationResponse: MutableLiveData<Response<Locations>> = MutableLiveData()
 
-    fun getAllCharacters() {
+    fun getAllCharacters(page: String) {
         viewModelScope.launch {
-            val response = repository.getAllCharacters()
+            val response = repository.getAllCharacters(page)
             characterResponse.value = response
         }
     }

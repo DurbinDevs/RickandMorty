@@ -4,8 +4,8 @@ import com.durbindevs.rickandmorty.api.RetrofitInstance
 
 class Repository {
 
-    suspend fun getAllCharacters() =
-        RetrofitInstance.api.getAllCharacters()
+    suspend fun getAllCharacters(page: String) =
+        RetrofitInstance.api.getAllCharacters(page)
 
     suspend fun getAllLocations() =
         RetrofitInstance.api.getAllLocations()

@@ -9,7 +9,9 @@ import retrofit2.http.Query
 interface CharacterApi {
 
     @GET("character")
-    suspend fun getAllCharacters() : Response<Characters>
+    suspend fun getAllCharacters(
+        @Query("page") number: String
+    ) : Response<Characters>
 
     @GET("location")
     suspend fun getAllLocations() : Response<Locations>

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.durbindevs.rickandmorty.CharacterActivity
 import com.durbindevs.rickandmorty.R
 import com.durbindevs.rickandmorty.adapter.CharacterAdapter
@@ -21,7 +22,7 @@ class AllCharactersFragment : Fragment(R.layout.fragment_all_characters) {
     private val characterAdapter by lazy { CharacterAdapter() }
     private var _binding: FragmentAllCharactersBinding? = null
     private val binding get() = _binding!!
-
+    var page = 1
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,7 +38,8 @@ class AllCharactersFragment : Fragment(R.layout.fragment_all_characters) {
         setupRecycler()
 
 
-        viewModel.getAllCharacters()
+
+        viewModel.getAllCharacters(page.toString())
         viewModel.characterResponse.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful && response.body() != null) {
                 characterAdapter.differ.submitList(response.body()!!.results)
@@ -55,6 +57,25 @@ class AllCharactersFragment : Fragment(R.layout.fragment_all_characters) {
             DividerItemDecoration(requireContext(),
             DividerItemDecoration.VERTICAL)
         )
+     addOnScrollListener(this@AllCharactersFragment.scrollListener)
  }
+
+    val scrollListener = object: RecyclerView.OnScrollListener(){
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val lastItem = layoutManager.findLastVisibleItemPosition()
+            val totalItems = layoutManager.itemCount
+
+            if (lastItem + 1 == totalItems) {
+                page++
+                Log.d("test", "page :$page")
+                viewModel.searchCharacters(page.toString())
+            }
+
+            Log.d("test", "last item :$lastItem")
+            Log.d("test", "total item :$totalItems")
+        }
+    }
 
 }
