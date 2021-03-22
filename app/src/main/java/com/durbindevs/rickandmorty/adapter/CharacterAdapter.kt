@@ -24,10 +24,7 @@ class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterViewHold
         }
     }
 
-    private val differ = AsyncListDiffer(this, diffCallBack)
-    var charList: List<Result>
-    get() = differ.currentList
-    set(value) { differ.submitList(value)}
+     val differ = AsyncListDiffer(this, diffCallBack)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
       return CharacterViewHolder(CharactorRowBinding.inflate(

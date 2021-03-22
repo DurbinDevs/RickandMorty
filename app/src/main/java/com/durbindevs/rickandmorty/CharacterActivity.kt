@@ -1,7 +1,6 @@
 package com.durbindevs.rickandmorty
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -18,7 +17,7 @@ class CharacterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCharactorsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Log.d("test", "response is : ")
+
         val repository = Repository()
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel  = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)

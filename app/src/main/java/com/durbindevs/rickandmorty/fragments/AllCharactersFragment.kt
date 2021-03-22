@@ -33,18 +33,15 @@ class AllCharactersFragment : Fragment(R.layout.fragment_all_characters) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("test", "response is : ")
         viewModel = (activity as CharacterActivity).viewModel
         setupRecycler()
 
+
         viewModel.getAllCharacters()
-        viewModel._response.observe(viewLifecycleOwner, { response ->
-            Log.d("test", "response is : $response")
+        viewModel.characterResponse.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful && response.body() != null) {
-                Log.d("test", "response is : $response")
-                characterAdapter.charList = response.body()!!.results
+                characterAdapter.differ.submitList(response.body()!!.results)
             } else {
-                Log.d("test", "response is : $response")
                 Log.e(ERROR, "Error fetching data")
             }
         })

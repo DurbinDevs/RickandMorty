@@ -4,4 +4,8 @@
     <string name="locations">Locations</string>
     <string name="favorites">Favorites</string>
     <string name="search">Search</string>
+    <string name="textview">TextView</string>
+    <string name="type">Type:</string>
+    <string name="location">Location</string>
+    <string name="dimension">Dimension:</string>
 </resources>
