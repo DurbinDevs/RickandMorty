@@ -7,8 +7,8 @@ class Repository {
     suspend fun getAllCharacters(page: String) =
         RetrofitInstance.api.getAllCharacters(page)
 
-    suspend fun getAllLocations() =
-        RetrofitInstance.api.getAllLocations()
+    suspend fun getAllLocations(page: String) =
+        RetrofitInstance.api.getAllLocations(page)
 
     suspend fun searchCharacters(search: String) =
         RetrofitInstance.api.searchCharacters(search)

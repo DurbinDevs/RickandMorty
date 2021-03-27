@@ -2,5 +2,5 @@ package com.durbindevs.rickandmorty.models
 
 data class Characters(
     val info: Info,
-    val results: List<Result>
+    val results: MutableList<Result>
 )

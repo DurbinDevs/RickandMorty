@@ -14,7 +14,9 @@ interface CharacterApi {
     ) : Response<Characters>
 
     @GET("location")
-    suspend fun getAllLocations() : Response<Locations>
+    suspend fun getAllLocations(
+        @Query("page") number: String
+    ) : Response<Locations>
 
     @GET("character")
     suspend fun searchCharacters(

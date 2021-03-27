@@ -1,5 +1,6 @@
 package com.durbindevs.rickandmorty.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,23 +10,34 @@ import com.durbindevs.rickandmorty.repository.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class MainViewModel(private val repository: Repository): ViewModel() {
+class MainViewModel(private val repository: Repository) : ViewModel() {
 
     val characterResponse: MutableLiveData<Response<Characters>> = MutableLiveData()
     val characterSearch: MutableLiveData<Response<Characters>> = MutableLiveData()
     val locationResponse: MutableLiveData<Response<Locations>> = MutableLiveData()
 
+    companion object {
+
+        var pageNumber = 1
+    }
+
+    init {
+        getAllCharacters(pageNumber.toString())
+    }
+
+    var characterResult: Response<Characters>? = null
+    var locationResult: Response<Locations>? = null
+
+
     fun getAllCharacters(page: String) {
         viewModelScope.launch {
-            val response = repository.getAllCharacters(page)
-            characterResponse.value = response
+            characterCall()
         }
     }
 
-    fun getAllLocations() {
+    fun getAllLocations(page: String) {
         viewModelScope.launch {
-            val response = repository.getAllLocations()
-            locationResponse.value = response
+         locationCall()
         }
     }
 
@@ -35,4 +47,49 @@ class MainViewModel(private val repository: Repository): ViewModel() {
             characterSearch.value = response
         }
     }
+
+    private fun handleGetAllCharacters(response: Response<Characters>): Response<Characters> {
+        if (response.isSuccessful && characterResult == null) {
+            characterResult = response
+        } else {
+            val result = response.body()?.results
+            val oldList = characterResult!!.body()?.results
+            val newList = result
+            Log.d("test", "${oldList}")
+            Log.d("test", "${result}")
+            oldList?.addAll(newList!!.toList())
+            //  return characterResult!!
+            Log.d("test", "add")
+        }
+        return characterResult!!
+    }
+
+    private suspend fun characterCall() {
+        Log.d("test", "character call: ${pageNumber}")
+        val response = repository.getAllCharacters(pageNumber.toString())
+        characterResponse.postValue(handleGetAllCharacters(response))
+    }
+
+    private fun handleGetAllLocations(response: Response<Locations>): Response<Locations> {
+        if (response.isSuccessful && locationResult == null) {
+            locationResult = response
+        } else {
+            val result = response.body()?.results
+            val oldList = locationResult!!.body()?.results
+            val newList = result
+            Log.d("test", "${oldList}")
+            Log.d("test", "${result}")
+            oldList?.addAll(newList!!.toList())
+            //  return characterResult!!
+            Log.d("test", "add")
+        }
+        return locationResult!!
+    }
+
+    private suspend fun locationCall() {
+        Log.d("test", "location call: ${pageNumber}")
+        val response = repository.getAllLocations(pageNumber.toString())
+        locationResponse.postValue(handleGetAllLocations(response))
+    }
+
 }
