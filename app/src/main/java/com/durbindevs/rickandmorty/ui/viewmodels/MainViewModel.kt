@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.durbindevs.rickandmorty.locationModels.Locations
 import com.durbindevs.rickandmorty.models.Characters
+import com.durbindevs.rickandmorty.models.Result
 import com.durbindevs.rickandmorty.repository.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -47,6 +48,12 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
             characterSearch.value = response
         }
     }
+
+    fun saveCharacter(result: Result) = viewModelScope.launch {
+       repository.upsert(result)
+    }
+
+    fun getSavedCharacters() = repository.getSavedCharacters()
 
     private fun handleGetAllCharacters(response: Response<Characters>): Response<Characters> {
         if (response.isSuccessful && characterResult == null) {

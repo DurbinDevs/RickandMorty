@@ -52,6 +52,8 @@ class SearchCharactersFragment : Fragment(R.layout.fragment_search_characters) {
 
     }
 
+   // val itemTouchCallBack = object : ItemTouchHelper
+
     private fun setupRecycler() = binding.rvSearch.apply {
         adapter = characterAdapter
         layoutManager = LinearLayoutManager(requireContext())

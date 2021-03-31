@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.durbindevs.rickandmorty.CharacterActivity
@@ -40,20 +41,38 @@ class AllCharactersFragment : Fragment(R.layout.fragment_all_characters) {
         viewModel = (activity as CharacterActivity).viewModel
         setupRecycler()
 
-
-
       //  viewModel.getAllCharacters(pageNumber.toString())
         viewModel.characterResponse.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful && response.body() != null) {
                 characterAdapter.differ.submitList(response.body()!!.results.toList())
+
             } else {
                 Log.e(ERROR, "Error fetching data")
             }
         })
 
+ItemTouchHelper(itemTouch).attachToRecyclerView(binding.rvAllCharacters)
     }
 
+    val itemTouch = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
+            or ItemTouchHelper.LEFT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return true
+        }
 
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.adapterPosition
+            val result = characterAdapter.differ.currentList[position]
+            characterAdapter.notifyItemChanged(position)
+            viewModel.saveCharacter(result)
+            Log.d("test", "swiped")
+        }
+
+    }
 
     var isError = false
     var isLoading = false
@@ -91,6 +110,7 @@ class AllCharactersFragment : Fragment(R.layout.fragment_all_characters) {
             }
         }
     }
+
 
 //    var isScrolling = false
 //

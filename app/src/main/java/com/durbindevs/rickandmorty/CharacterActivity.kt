@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.durbindevs.rickandmorty.databinding.ActivityCharactorsBinding
+import com.durbindevs.rickandmorty.db.CharacterDatabase
 import com.durbindevs.rickandmorty.repository.Repository
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModelFactory
@@ -18,7 +19,7 @@ class CharacterActivity : AppCompatActivity() {
         binding = ActivityCharactorsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val repository = Repository()
+        val repository = Repository(CharacterDatabase(this))
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel  = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
 
