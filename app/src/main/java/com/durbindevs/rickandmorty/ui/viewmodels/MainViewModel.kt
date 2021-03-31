@@ -53,6 +53,14 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
        repository.upsert(result)
     }
 
+    fun deleteCharacters(result: Result) = viewModelScope.launch {
+        repository.deleteCharacters(result)
+    }
+
+    fun saveLoc(result: com.durbindevs.rickandmorty.locationModels.Result) = viewModelScope.launch {
+        repository.saveLoc(result)
+    }
+
     fun getSavedCharacters() = repository.getSavedCharacters()
 
     private fun handleGetAllCharacters(response: Response<Characters>): Response<Characters> {

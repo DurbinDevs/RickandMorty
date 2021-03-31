@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.durbindevs.rickandmorty.CharacterActivity
@@ -19,7 +21,7 @@ import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel.Companion.pageNumber
 import com.durbindevs.rickandmorty.utils.Constants
 
-class AllLocationsFragment: Fragment(R.layout.fragment_all_locations) {
+class AllLocationsFragment : Fragment(R.layout.fragment_all_locations) {
 
     private val locationAdapter by lazy { LocationAdapter() }
     private lateinit var viewModel: MainViewModel
@@ -44,15 +46,41 @@ class AllLocationsFragment: Fragment(R.layout.fragment_all_locations) {
         viewModel.locationResponse.observe(viewLifecycleOwner, Observer { response ->
             locationAdapter.differ.submitList(response.body()!!.results)
         })
+ItemTouchHelper(itemTouch).attachToRecyclerView(binding.rvAllLocations)
     }
 
     private fun setupRecycler() = binding.rvAllLocations.apply {
         adapter = locationAdapter
         layoutManager = LinearLayoutManager(requireContext())
         addItemDecoration(
-            DividerItemDecoration(requireContext(),
-                DividerItemDecoration.VERTICAL)
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
         )
+        addOnScrollListener(this@AllLocationsFragment.scrollListener)
+    }
+
+
+    val itemTouch = object : ItemTouchHelper.SimpleCallback(
+        0, ItemTouchHelper.RIGHT
+                or ItemTouchHelper.LEFT
+    ) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.adapterPosition
+            val result = locationAdapter.differ.currentList[position]
+            locationAdapter.notifyItemChanged(position)
+            viewModel.saveLoc(result)
+            Toast.makeText(requireContext(), "Saved to favorites!", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -75,11 +103,12 @@ class AllLocationsFragment: Fragment(R.layout.fragment_all_locations) {
             val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
             val isNotAtBeginning = firstVisibleItemPosition >= 0
             val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
-            val shouldPaginate = isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning &&
-                    isTotalMoreThanVisible && isScrolling
-            if(shouldPaginate) {
-                MainViewModel.pageNumber++
-                Log.d("test", "viewmodel: ${MainViewModel.pageNumber}")
+            val shouldPaginate =
+                isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning &&
+                        isTotalMoreThanVisible && isScrolling
+            if (shouldPaginate) {
+                pageNumber++
+                Log.d("test", "viewmodel: ${pageNumber}")
                 viewModel.getAllLocations(pageNumber.toString())
                 isScrolling = false
             }
@@ -87,9 +116,10 @@ class AllLocationsFragment: Fragment(R.layout.fragment_all_locations) {
 
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                 isScrolling = true
             }
+
         }
     }
 }

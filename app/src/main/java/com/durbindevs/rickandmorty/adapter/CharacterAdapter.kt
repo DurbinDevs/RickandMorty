@@ -39,7 +39,7 @@ class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterViewHold
        holder.binding.apply {
            tvCharacterName.text = newCharList.name
            tvCharacterStatus.text = newCharList.status
-     //      tvCharacterLocation.text = newCharList.location.name
+           tvCharacterLocation.text = newCharList.location.name
            tvCharacterSpecies.text = newCharList.species
            Glide.with(this@CharacterAdapter.CharacterViewHolder(this).itemView)
                .load(newCharList.image)

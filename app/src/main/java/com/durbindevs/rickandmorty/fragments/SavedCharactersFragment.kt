@@ -1,14 +1,16 @@
 package com.durbindevs.rickandmorty.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.durbindevs.rickandmorty.CharacterActivity
 import com.durbindevs.rickandmorty.R
 import com.durbindevs.rickandmorty.adapter.CharacterAdapter
@@ -36,14 +38,30 @@ class SavedCharactersFragment: Fragment(R.layout.fragment_saved_characters) {
         viewModel = (activity as CharacterActivity).viewModel
         setupRecycler()
 
+        ItemTouchHelper(itemCallTouchCallback).attachToRecyclerView(binding.rvSavedCharacters)
 
         viewModel.getSavedCharacters().observe(viewLifecycleOwner, Observer { result ->
             charAdapter.differ.submitList(result)
-            Log.d("test", "save observe${result}")
         })
 
+    }
 
+    val itemCallTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or
+            ItemTouchHelper.LEFT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return true
+        }
 
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.adapterPosition
+            val result = charAdapter.differ.currentList[position]
+            viewModel.deleteCharacters(result)
+            Toast.makeText(requireContext(), "Successfully deleted!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupRecycler() = binding.rvSavedCharacters.apply {

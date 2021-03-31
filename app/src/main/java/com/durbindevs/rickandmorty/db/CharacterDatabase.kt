@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.durbindevs.rickandmorty.models.Result
 
 
@@ -12,6 +13,7 @@ import com.durbindevs.rickandmorty.models.Result
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class CharacterDatabase: RoomDatabase() {
 
     abstract fun getCharacterDao(): CharacterDao

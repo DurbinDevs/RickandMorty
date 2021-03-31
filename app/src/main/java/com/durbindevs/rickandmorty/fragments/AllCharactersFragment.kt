@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -41,7 +42,7 @@ class AllCharactersFragment : Fragment(R.layout.fragment_all_characters) {
         viewModel = (activity as CharacterActivity).viewModel
         setupRecycler()
 
-      //  viewModel.getAllCharacters(pageNumber.toString())
+
         viewModel.characterResponse.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful && response.body() != null) {
                 characterAdapter.differ.submitList(response.body()!!.results.toList())
@@ -69,7 +70,7 @@ ItemTouchHelper(itemTouch).attachToRecyclerView(binding.rvAllCharacters)
             val result = characterAdapter.differ.currentList[position]
             characterAdapter.notifyItemChanged(position)
             viewModel.saveCharacter(result)
-            Log.d("test", "swiped")
+            Toast.makeText(requireContext(), "Saved to favorites!", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -110,33 +111,6 @@ ItemTouchHelper(itemTouch).attachToRecyclerView(binding.rvAllCharacters)
             }
         }
     }
-
-
-//    var isScrolling = false
-//
-//    val scrollListener = object: RecyclerView.OnScrollListener(){
-//        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//            super.onScrollStateChanged(recyclerView, newState)
-//            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
-//                isScrolling = true
-//            }
-//        }
-//
-//        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//            super.onScrolled(recyclerView, dx, dy)
-//            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-//            val lastItem = layoutManager.findLastVisibleItemPosition()
-//            val totalItems = layoutManager.itemCount
-//
-//            if (lastItem + 2 == totalItems && isScrolling) {
-//                Log.d("test", "page :$pageNumber")
-//                viewModel.getAllCharacters(pageNumber.toString())
-//                Log.d("test", "last item :$lastItem")
-//                Log.d("test", "total item :$totalItems")
-//            }
-//
-//        }
-//    }
 
  private fun setupRecycler() = binding.rvAllCharacters.apply {
      adapter = characterAdapter
