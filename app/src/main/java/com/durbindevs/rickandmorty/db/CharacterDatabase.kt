@@ -18,20 +18,4 @@ abstract class CharacterDatabase: RoomDatabase() {
 
     abstract fun getCharacterDao(): CharacterDao
 
-    companion object{
-        @Volatile
-        private var instance: CharacterDatabase? = null
-        private val LOCK = Any()
-
-        operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
-            instance ?: createDatabase(context).also { instance = it}
-        }
-
-        private fun createDatabase(context: Context) =
-            Room.databaseBuilder(
-                context.applicationContext,
-                CharacterDatabase::class.java,
-                "character_db.db"
-            ).build()
-    }
 }

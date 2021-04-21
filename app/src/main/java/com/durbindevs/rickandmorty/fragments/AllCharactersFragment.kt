@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,10 +21,12 @@ import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel.Companion.pageNumber
 import com.durbindevs.rickandmorty.utils.Constants.Companion.ERROR
 import com.durbindevs.rickandmorty.utils.Constants.Companion.QUERY_PAGE_SIZE
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AllCharactersFragment : Fragment(R.layout.fragment_all_characters) {
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
     private val characterAdapter by lazy { CharacterAdapter() }
     private var _binding: FragmentAllCharactersBinding? = null
     private val binding get() = _binding!!
@@ -39,7 +42,6 @@ class AllCharactersFragment : Fragment(R.layout.fragment_all_characters) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = (activity as CharacterActivity).viewModel
         setupRecycler()
 
 

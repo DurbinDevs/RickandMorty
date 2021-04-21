@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -19,10 +20,12 @@ import com.durbindevs.rickandmorty.adapter.CharacterAdapter
 import com.durbindevs.rickandmorty.databinding.FragmentSearchCharactersBinding
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel
 import com.durbindevs.rickandmorty.utils.Constants.Companion.ERROR
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchCharactersFragment : Fragment(R.layout.fragment_search_characters) {
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
     private val characterAdapter by lazy { CharacterAdapter() }
     private var _binding: FragmentSearchCharactersBinding? = null
     private val binding get() = _binding!!
@@ -38,7 +41,6 @@ class SearchCharactersFragment : Fragment(R.layout.fragment_search_characters) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = (activity as CharacterActivity).viewModel
         setupRecycler()
 
         binding.etSearch.addTextChangedListener { search ->

@@ -8,10 +8,13 @@ import com.durbindevs.rickandmorty.locationModels.Locations
 import com.durbindevs.rickandmorty.models.Characters
 import com.durbindevs.rickandmorty.models.Result
 import com.durbindevs.rickandmorty.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class MainViewModel(private val repository: Repository) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
     val characterResponse: MutableLiveData<Response<Characters>> = MutableLiveData()
     val characterSearch: MutableLiveData<Response<Characters>> = MutableLiveData()
@@ -57,10 +60,6 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         repository.deleteCharacters(result)
     }
 
-    fun saveLoc(result: com.durbindevs.rickandmorty.locationModels.Result) = viewModelScope.launch {
-        repository.saveLoc(result)
-    }
-
     fun getSavedCharacters() = repository.getSavedCharacters()
 
     private fun handleGetAllCharacters(response: Response<Characters>): Response<Characters> {
@@ -69,12 +68,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         } else {
             val result = response.body()?.results
             val oldList = characterResult!!.body()?.results
-            val newList = result
-            Log.d("test", "${oldList}")
-            Log.d("test", "${result}")
-            oldList?.addAll(newList!!.toList())
+            oldList?.addAll(result!!.toList())
             //  return characterResult!!
-            Log.d("test", "add")
         }
         return characterResult!!
     }

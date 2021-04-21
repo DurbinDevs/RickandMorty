@@ -10,18 +10,15 @@ import com.durbindevs.rickandmorty.db.CharacterDatabase
 import com.durbindevs.rickandmorty.repository.Repository
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CharacterActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityCharactorsBinding
-    lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCharactorsBinding.inflate(layoutInflater)
+       val binding = ActivityCharactorsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val repository = Repository(CharacterDatabase(this))
-        val viewModelFactory = MainViewModelFactory(repository)
-        viewModel  = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
 
         val childFragment = supportFragmentManager.findFragmentByTag("nav_fragment") as? NavHostFragment
        binding.bottomNavView.setupWithNavController(childFragment!!.navController)

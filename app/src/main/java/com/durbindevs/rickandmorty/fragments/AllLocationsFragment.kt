@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -20,11 +21,13 @@ import com.durbindevs.rickandmorty.databinding.FragmentAllLocationsBinding
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel.Companion.pageNumber
 import com.durbindevs.rickandmorty.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AllLocationsFragment : Fragment(R.layout.fragment_all_locations) {
 
+    private val viewModel: MainViewModel by viewModels()
     private val locationAdapter by lazy { LocationAdapter() }
-    private lateinit var viewModel: MainViewModel
     private var _binding: FragmentAllLocationsBinding? = null
     private val binding get() = _binding!!
 
@@ -39,7 +42,6 @@ class AllLocationsFragment : Fragment(R.layout.fragment_all_locations) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = (activity as CharacterActivity).viewModel
         setupRecycler()
 
         viewModel.getAllLocations(pageNumber.toString())
@@ -78,7 +80,6 @@ ItemTouchHelper(itemTouch).attachToRecyclerView(binding.rvAllLocations)
             val position = viewHolder.adapterPosition
             val result = locationAdapter.differ.currentList[position]
             locationAdapter.notifyItemChanged(position)
-            viewModel.saveLoc(result)
             Toast.makeText(requireContext(), "Saved to favorites!", Toast.LENGTH_SHORT).show()
         }
     }

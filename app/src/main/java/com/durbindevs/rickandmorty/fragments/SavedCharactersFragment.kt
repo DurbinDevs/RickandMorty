@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,10 +17,12 @@ import com.durbindevs.rickandmorty.R
 import com.durbindevs.rickandmorty.adapter.CharacterAdapter
 import com.durbindevs.rickandmorty.databinding.FragmentSavedCharactersBinding
 import com.durbindevs.rickandmorty.ui.viewmodels.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SavedCharactersFragment: Fragment(R.layout.fragment_saved_characters) {
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
     private val charAdapter by lazy { CharacterAdapter() }
     private var _binding: FragmentSavedCharactersBinding? = null
     private val binding get() = _binding!!
@@ -35,7 +38,6 @@ class SavedCharactersFragment: Fragment(R.layout.fragment_saved_characters) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = (activity as CharacterActivity).viewModel
         setupRecycler()
 
         ItemTouchHelper(itemCallTouchCallback).attachToRecyclerView(binding.rvSavedCharacters)
